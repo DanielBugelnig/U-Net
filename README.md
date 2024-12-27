@@ -1,7 +1,7 @@
 #### Deadline 31.01.2024
 
-# Update 27.12.2024- Daniel
-
+#### Update 27.12.2024- Daniel
+- added architecture.py: U-Net architecture
 
 
 #### Kick off 27.12.2024
