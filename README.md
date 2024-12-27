@@ -31,7 +31,8 @@ git clone https://github.com/DanielBugelnig/U-Net.git
 
 Update the local repository:
 ```bash
-git pull origin main
+git pull origin/master
+
 ```
 
 Create a new branch(one-time setup):
