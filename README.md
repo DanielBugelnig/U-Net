@@ -4,9 +4,32 @@
 To clone the repository:
 ```bash
 git clone https://github.com/DanielBugelnig/U-Net.git
+```
 
+Update the local repository:
 ```bash
 git pull origin main
+```
+
+Create a new branch(one-time setup):
+```bash
+git checkout -b <branch-name>
+```
+
+Switch to your branch
+```bash
+git checkout <branch-name>
+```
+
+Commit your changes:
+```bash 
+git add .
+git commit -m "Your message"
+```
+Push your changes:
+```bash
+git push origin <branch-name>
+```
 
 #### Kick off 27.12.2024
 - Talk about goal
