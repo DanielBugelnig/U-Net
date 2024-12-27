@@ -31,7 +31,7 @@ git clone https://github.com/DanielBugelnig/U-Net.git
 
 Update the local repository:
 ```bash
-git pull origin/master
+git pull origin master
 
 ```
 
