@@ -129,6 +129,7 @@ class UNet(nn.Module):
         x = self.cropConcat(x1,x)
         x = F.relu(self.conv7b(x))
         x = F.relu(self.conv8b(x))
-        x = F.relu(self.final_conv(x))
+        x = self.final_conv(x)
+        return x
 
  
