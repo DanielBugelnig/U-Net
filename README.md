@@ -1,5 +1,8 @@
 #### Deadline 31.01.2024
 
+### Update 28.12.2024- Daniel
+- found the dataset used in the paper, added it to Github
+
 #### Update 27.12.2024- Daniel
 - added architecture.py: U-Net architecture
 
