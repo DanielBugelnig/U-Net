@@ -1,3 +1,6 @@
+# Script for visualizing and testing the U-net model
+# Explanation of code in visualization_ReadMe.md
+
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,7 +13,7 @@ from torchvision.transforms import ToTensor, transforms
 import torchvision.models as models
 import torchvision.transforms.functional as Trans
 
-
+# Count images in TIF file
 def countImages(image):
     # Count images
     image_count = 0
@@ -24,6 +27,7 @@ def countImages(image):
     print(f"Number of pages: {image_count}\n")
     return image_count
 
+# Display all Images of the dataset
 def displayImages(image, title):
     plt.figure(figsize=(20,20))
     for i in range(countImages(image)):
@@ -46,11 +50,11 @@ def predict_single(image, model):
     image = image.unsqueeze(0).to(device)  # Add batch dimension and move to device
     with torch.no_grad():
         pred = model(image)
-        return pred
+    return pred
     
 
-
-def evaluate(prediction, expected):
+# function only for testing purposes of visualization
+def evaluate_test(prediction, expected):
     probabilities = torch.sigmoid(prediction)
     probabilities = prediction
     predicted_segmentation = (probabilities > 0.5).int()  #convert to binary mask (1,1,H,W)
@@ -64,6 +68,7 @@ def evaluate(prediction, expected):
     diff = (expected_segmentation != predicted_segmentation).int()
     return predicted_segmentation, expected_segmentation, diff  #return both binary masks
 
+# correct evaluation function
 def evaluate(prediction, expected):
     probabilities = torch.sigmoid(prediction)
     predicted_segmentation = (probabilities > 0.5).int()  #convert to binary mask (1,1,H,W)
@@ -99,8 +104,6 @@ test_label = Image.open("ISBI-2012-challenge/test-labels.tif")
 #input("press enter for close")
 
 #---------------------------------------------------------------------
-
-
 
 
 

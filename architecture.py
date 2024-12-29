@@ -31,6 +31,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F #for ReLu
 import torchvision.transforms.functional as Trans
+from torchinfo import summary
 
 class UNet(nn.Module):
     def __init__(self, input_number, output_number):
@@ -69,24 +70,24 @@ class UNet(nn.Module):
         self.conv1b = nn.Conv2d(1024, 512, kernel_size=3, padding=0) # 512x54x54 other 512 features come from encoder site
         self.conv2b = nn.Conv2d(512, 512, kernel_size=3, padding=0) # 512x52x52
 
-        self.upconv2 = nn.ConvTranspose2d(512, 512, 2, 2) # 512x104x104
+        self.upconv2 = nn.ConvTranspose2d(512, 256, 2, 2) # 512x104x104
         self.conv3b = nn.Conv2d(512, 256, 3, padding=0) #256x102x102
         self.conv4b = nn.Conv2d(256, 256, 3, padding=0) # 256x100x100
 
-        self.upconv3 = nn.ConvTranspose2d(256, 256, 2,2,) #256x200x200
+        self.upconv3 = nn.ConvTranspose2d(256, 128, 2,2,) #256x200x200
         self.conv5b = nn.Conv2d(256, 128, 3, padding=0) #128x198x198
         self.conv6b = nn.Conv2d(128, 128, 3, padding=0) #128x196x196
 
-        self.upconv4 = nn.ConvTranspose2d(128, 128, 2, 2) #128x392x392
+        self.upconv4 = nn.ConvTranspose2d(128, 64, 2, 2) #128x392x392
         self.conv7b = nn.Conv2d(128, 64, 3, padding=0) #64x390x390
         self.conv8b = nn.Conv2d(64,64,3, padding=0) # 64x388x388
-        self.final_conv = nn.Conv2d(64, self.output_number, kernel_size=1, padding=1) #2x388x388
+        self.final_conv = nn.Conv2d(64, self.output_number, kernel_size=1, padding=0) #2x388x388
     
     def cropConcat(self, encoder, decoder):
         # crops the encoder tensor and concatenate its with the decoder tensor
         _,_,H,W = decoder.shape
         cropped_enc = Trans.center_crop(encoder, [H,W]) # crops the encoder tensor in the centre
-        return torch.cat((cropped_enc, decoder)) # concatenates at the feature dimension
+        return torch.cat((cropped_enc, decoder), dim=1) # concatenates at the feature dimension
 
     def forward(self, x):
         # Encoder
@@ -134,3 +135,5 @@ class UNet(nn.Module):
         return x
 
  
+model = UNet(1,2)
+summary(model, input_size=(1, 1, 572, 572))  # Example input size

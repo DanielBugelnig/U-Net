@@ -1,6 +1,12 @@
 #### Deadline 31.01.2024
 
 
+
+### Architecture
+- U-Net architecture is located in architecture.py
+
+![alt text](architecture.png)
+
 ### Update 29.12.2024- Daniel
 - added visualization.py: visualize the dataset and the predictions with visual comparison
 - 
