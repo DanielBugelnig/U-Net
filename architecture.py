@@ -20,7 +20,8 @@
 # is important to select the input tile size such that all 2x2 max-pooling operations
 # are applied to a layer with an even x- and y-size.
 
-
+# The reduced output size within a single tile (e.g., 388x388 for a 572x572 input) ensures that the predictions are based on full context, 
+# avoiding incomplete or invalid segmentations near the borders. 
 
 
 

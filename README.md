@@ -1,5 +1,10 @@
 #### Deadline 31.01.2024
 
+
+### Update 29.12.2024- Daniel
+- added visualization.py: visualize the dataset
+- 
+
 ### Update 28.12.2024- Daniel
 - found the dataset used in the paper, added it to Github
 
