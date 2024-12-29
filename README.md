@@ -2,7 +2,7 @@
 
 
 ### Update 29.12.2024- Daniel
-- added visualization.py: visualize the dataset
+- added visualization.py: visualize the dataset and the predictions with visual comparison
 - 
 
 ### Update 28.12.2024- Daniel
