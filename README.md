@@ -1,5 +1,13 @@
 #### Deadline 31.01.2024
 
+### Meeting 19.01.2025
+- Training part: cut down the ground truth to get the training and evaluation part running --> Arthur
+- Dataset mirroring of smaller images (mirroring only the train/test images (not the gt) --> Sofia
+- Dataset preparation (see paper) --> Sofia
+- adaptation to multiple classification (>2), optional
+
+- keeping track of training
+- table of hyperparameters (learning rate, batch size, epochs, optimizer, loss), results --> accuracy, precision, recall, f1 score)
 
 
 ### Architecture
