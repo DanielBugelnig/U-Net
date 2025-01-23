@@ -1,7 +1,6 @@
 
 #### DEEP GLOBAL LAND DATA SET LINK
-
-https://www.dropbox.com/scl/fi/rcx0r66y9mzb87a2diu9n/DeepGlobeland_572_-tif.rar?rlkey=7gzssd3n4w88t6ss411zsghr4&st=0azt6v84&dl=0
+https://www.dropbox.com/scl/fi/albpe6ccgcvawcirdvc4y/DeepGlobeland_572_-tif.rar?rlkey=asqx0hrq2i6jaejtqujvvwwas&st=ngr2vbwg&dl=0
 
 - This link is to download the data set for the project
 
