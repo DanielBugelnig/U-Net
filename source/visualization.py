@@ -13,6 +13,8 @@ from torchvision.transforms import ToTensor, transforms
 import torchvision.models as models
 import torchvision.transforms.functional as Trans
 
+from architecture import UNet
+
 # Count images in TIF file
 def countImages(image):
     # Count images
@@ -73,16 +75,17 @@ def evaluate(prediction, expected):
     probabilities = torch.sigmoid(prediction)
     predicted_segmentation = (probabilities > 0.5).int()  #convert to binary mask (1,1,H,W)
 
-    _,H,W = predicted_segmentation.shape  
+    _,_,H,W = predicted_segmentation.shape  
     expected_segmentation = Trans.center_crop(expected, [H,W]) # crop the expected label to size of model output (from 512 to 388)
 
     diff = (expected_segmentation != predicted_segmentation).int() # difference mask
     return predicted_segmentation, expected_segmentation, diff  #return both binary masks
 
+
 # selecting device and loading model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-#model = torch.load('u_net.pth', weights_only=False)
-#model = model.to(device)
+model = UNet(1,1).to(device)
+model.load_state_dict(torch.load("results/model2.pth" ,map_location=device, weights_only=True))
 
 
 
@@ -139,14 +142,15 @@ print(f"Tensor size label tensor: {label_tensor.shape}") # (1,1,512,512)
 
 # Run the U-net for one image
 #prediction = predict_single(test_image, model)
+prediction = predict_single(image_tensor, model)
 
-# --> prediction_mask, label_mask, diff = evaluate(prediction, label_tensor)
-prediction_mask, label_mask, diff = evaluate(image_tensor, label_tensor)
+prediction_mask, label_mask, diff = evaluate(prediction, label_tensor)
 print(f"Tensor size prediction mask: {prediction_mask.shape}") 
 print(f"Tensor size label mask: {label_mask.shape}") 
-prediction_mask.squeeze_(0)
+prediction_mask.squeeze_(0).squeeze_(0)
+print(f"Tensor size prediction mask: {prediction_mask.shape}")
 label_mask.squeeze_(0)
-diff.squeeze_(0)
+diff.squeeze_(0).squeeze_(0)
 plt.subplot(2,2,2)
 plt.imshow(prediction_mask, cmap='viridis')
 plt.title(f"Prediction")
