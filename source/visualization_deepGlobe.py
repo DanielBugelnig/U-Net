@@ -92,7 +92,7 @@ model.load_state_dict(torch.load("../results/model2.pth" ,map_location=device, w
 # ----------------------------------------------------------------------
 # Displaying the complete  train/test dataset
 #Training images
-train_image = Image.open("../ISBI-2012-challenge/train-volume.tif")
+train_image = Image.open("../Deep_Global_Land/DeepGlobeLand_572_mirror/test/86805_sat_augmented.tif")
 #displayImages(train_image, "Training images")
 # Training labels
 train_label = Image.open("../ISBI-2012-challenge/train-labels.tif")
@@ -116,61 +116,5 @@ test_label = Image.open("../ISBI-2012-challenge/test-labels.tif")
 # Image size = 512x512,
 # Prediction size = 388x388
 # select a random image of test set
-randomID = random.randint(1, countImages(test_image))
-test_image.seek(randomID)
-test_label.seek(randomID)
-
-print(f"Test Image Count: {countImages(test_image)} Train Image Count: {countImages(train_image)}")
-
-plt.figure(figsize=(30,30))
-
-# Test image
-plt.subplot(2,2, 1)
-plt.imshow(test_image)
-plt.title(f"Test image")
-plt.axis("off")
-
-
-# Transform the test image/label to tensor
-transform = transforms.Compose([transforms.ToTensor()]) # convert PIL image to (C,H,W)
-image_tensor = transform(test_image)
-label_tensor = transform(test_label)
-#image_tensor = image_tensor.unsqueeze(0) #  Shape (1,C,H,W)
-#torch.set_printoptions(threshold=torch.inf)
-print(f"Tensor size image_tensor: {image_tensor.shape}") # (1,1,512,512)
-print(image_tensor)
-print(f"Tensor size label tensor: {label_tensor.shape}") # (1,1,512,512)
-#print(label_tensor)
-
-# Run the U-net for one image
-#prediction = predict_single(test_image, model)
-prediction = predict_single(image_tensor, model)
-
-prediction_mask, label_mask, diff = evaluate(prediction, label_tensor)
-print(f"Tensor size prediction mask: {prediction_mask.shape}") 
-print(f"Tensor size label mask: {label_mask.shape}") 
-prediction_mask.squeeze_(0).squeeze_(0)
-print(f"Tensor size prediction mask: {prediction_mask.shape}")
-label_mask.squeeze_(0)
-diff.squeeze_(0).squeeze_(0)
-plt.subplot(2,2,2)
-plt.imshow(prediction_mask, cmap='viridis')
-plt.title(f"Prediction")
-cbar = plt.colorbar()
-cbar.set_label("0: membrane, 1: membrane")
-plt.axis("off")
-plt.subplot(2,2,3)
-plt.imshow(label_mask, cmap='viridis')
-cbar = plt.colorbar()
-cbar.set_label("0: membrane, 1: cell")
-plt.title(f"GT")
-plt.axis("off")
-plt.subplot(2,2,4)
-plt.imshow(diff, cmap='viridis')
-cbar = plt.colorbar()
-cbar.set_label("0: correct, 1: wrong")
-plt.title(f"Difference")
-plt.axis("off")
-# add colorbar
-
-plt.show()
+count_images = countImages(test_image)
+print(count_images)

@@ -92,17 +92,17 @@ model.load_state_dict(torch.load("../results/model2.pth" ,map_location=device, w
 # ----------------------------------------------------------------------
 # Displaying the complete  train/test dataset
 #Training images
-train_image = Image.open("../ISBI-2012-challenge/train-volume.tif")
+train_image = Image.open("../ISBI-2012-challenge/ISBI-2012-mirrored/train-volume_augmented.tif")
 #displayImages(train_image, "Training images")
 # Training labels
-train_label = Image.open("../ISBI-2012-challenge/train-labels.tif")
+train_label = Image.open("../ISBI-2012-challenge/ISBI-2012-mirrored/train-labels_augmented.tif")
 #displayImages(train_label, "Training labels")
 
 # #Test images
-test_image = Image.open("../ISBI-2012-challenge/test-volume.tif")
+test_image = Image.open("../ISBI-2012-challenge/ISBI-2012-mirrored/test-volume_augmented.tif")
 # displayImages(test_image, "Test images")
 # Training labels
-test_label = Image.open("../ISBI-2012-challenge/test-labels.tif")
+test_label = Image.open("../ISBI-2012-challenge/ISBI-2012-mirrored/test-labels_augmented.tif")
 # displayImages(test_label, "Test labels")
 #input("press enter for close")
 
@@ -119,8 +119,6 @@ test_label = Image.open("../ISBI-2012-challenge/test-labels.tif")
 randomID = random.randint(1, countImages(test_image))
 test_image.seek(randomID)
 test_label.seek(randomID)
-
-print(f"Test Image Count: {countImages(test_image)} Train Image Count: {countImages(train_image)}")
 
 plt.figure(figsize=(30,30))
 
