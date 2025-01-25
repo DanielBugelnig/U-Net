@@ -5,7 +5,7 @@ https://www.dropbox.com/scl/fi/albpe6ccgcvawcirdvc4y/DeepGlobeland_572_-tif.rar?
 - This link is to download the data set for the project
 
 ### It contains:
-  - The training data for Land Cover Challenge contains 560 satellite imagery in RGB, size 572x572.
+- The training data for Land Cover Challenge contains 560 satellite imagery in RGB, size 572x572.
 - The imagery has 50cm pixel resolution, collected by DigitalGlobe's satellite.
 - The dataset contains 121 validation and 121 test images.
 

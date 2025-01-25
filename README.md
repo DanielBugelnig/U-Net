@@ -1,5 +1,15 @@
 #### Deadline 31.01.2024
 
+### Mirroring the ISBI dataset
+-  Sofia: 2 .tif files of Train/Test image dataset --> include each 30 images mirrored to a size of 572x572 pixels 
+-  Sofia: Deep Global 4 .tif Files Train, Test images, Train, Test labels --> tif images, but we have to look to put these 7 dimensions also in one entry of the tif file.
+-  Daniel: Data transformations
+-  Arthur: Adjust the training similar to the Loss in the paper described
+-  Daniel: Weight initialization
+
+
+
+
 ### Meeting 19.01.2025
 - Training part: cut down the ground truth to get the training and evaluation part running --> Arthur
 - Dataset mirroring of smaller images (mirroring only the train/test images (not the gt) --> Sofia
