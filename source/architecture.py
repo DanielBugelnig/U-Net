@@ -135,5 +135,5 @@ class UNet(nn.Module):
         return x
 
  
-model = UNet(1,2)
+model = UNet(1,1)
 summary(model, input_size=(1, 1, 572, 572))  # Example input size

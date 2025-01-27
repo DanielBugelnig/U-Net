@@ -5,8 +5,10 @@ from torchvision import transforms
 import torchvision.transforms.functional as Trans
 from PIL import Image
 import matplotlib.pyplot as plt
+from architecture import UNet
 
 torch.cuda.empty_cache()
+
 
 #Loading data
 #https://pytorch.org/tutorials/beginner/data_loading_tutorial.html

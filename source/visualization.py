@@ -12,7 +12,6 @@ from torchvision import datasets
 from torchvision.transforms import ToTensor, transforms
 import torchvision.models as models
 import torchvision.transforms.functional as Trans
-
 from architecture import UNet
 
 # Count images in TIF file
@@ -50,8 +49,10 @@ def displayImages(image, title):
 def predict_single(image, model):
     model.eval()
     image = image.unsqueeze(0).to(device)  # Add batch dimension and move to device
+    print(f"New Test 1: {image.shape}")
     with torch.no_grad():
         pred = model(image)
+    print(f"New Test 2: {pred.shape}")
     return pred
     
 
@@ -82,15 +83,18 @@ def evaluate(prediction, expected):
     return predicted_segmentation, expected_segmentation, diff  #return both binary masks
 
 
+
+
 # selecting device and loading model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = UNet(1,1).to(device)
-model.load_state_dict(torch.load("../results/model2.pth" ,map_location=device, weights_only=True))
+model.load_state_dict(torch.load("../results/model_data_augmentation.pth" ,map_location=device, weights_only=True))
+
 
 
 
 # ----------------------------------------------------------------------
-# Displaying the complete  train/test dataset
+# Loading the dataset
 #Training images
 train_image = Image.open("../ISBI-2012-challenge/train-volume.tif")
 #displayImages(train_image, "Training images")
@@ -104,8 +108,6 @@ test_image = Image.open("../ISBI-2012-challenge/test-volume.tif")
 # Training labels
 test_label = Image.open("../ISBI-2012-challenge/test-labels.tif")
 # displayImages(test_label, "Test labels")
-#input("press enter for close")
-
 #---------------------------------------------------------------------
 
 
@@ -120,19 +122,11 @@ randomID = random.randint(1, countImages(test_image))
 test_image.seek(randomID)
 test_label.seek(randomID)
 
-print(f"Test Image Count: {countImages(test_image)} Train Image Count: {countImages(train_image)}")
 
-plt.figure(figsize=(30,30))
-
-# Test image
-plt.subplot(2,2, 1)
-plt.imshow(test_image)
-plt.title(f"Test image")
-plt.axis("off")
 
 
 # Transform the test image/label to tensor
-transform = transforms.Compose([transforms.ToTensor()]) # convert PIL image to (C,H,W)
+transform = transforms.Compose([transforms.ToTensor(), transforms.Resize((572,572))]) # convert PIL image to (C,H,W)
 image_tensor = transform(test_image)
 label_tensor = transform(test_label)
 #image_tensor = image_tensor.unsqueeze(0) #  Shape (1,C,H,W)
@@ -143,14 +137,30 @@ print(f"Tensor size label tensor: {label_tensor.shape}") # (1,1,512,512)
 #print(label_tensor)
 
 # Run the U-net for one image
-#prediction = predict_single(test_image, model)
 prediction = predict_single(image_tensor, model)
+print(f"Test new: {prediction.shape}")
 
 prediction_mask, label_mask, diff = evaluate(prediction, label_tensor)
+
 print(f"Tensor size prediction mask: {prediction_mask.shape}") 
 print(f"Tensor size label mask: {label_mask.shape}") 
+
+
+
+# Visualization
+# What we want to display: Image, Prediction; Groundtruth, Difference
+plt.figure(figsize=(30,30))
+
+# Test image
+test_image = Trans.center_crop(test_image, [388,388])
+plt.subplot(2,2, 1)
+plt.imshow(test_image, cmap='viridis')
+plt.title(f"Test image")
+plt.axis("off")
+print(f"Test image: size {test_image.size}")
+
+# Prediction, Groundtruth, Difference
 prediction_mask.squeeze_(0).squeeze_(0)
-print(f"Tensor size prediction mask: {prediction_mask.shape}")
 label_mask.squeeze_(0)
 diff.squeeze_(0).squeeze_(0)
 plt.subplot(2,2,2)
