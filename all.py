@@ -80,9 +80,9 @@ def merge_tiff(input_dir, output_tiff_path):
 
 if __name__ == "__main__":
     # Directory paths
-    input_directory =  "/mnt/c/Users/rebec/Desktop/dataset/DeepGlobe_Land_572/train"  # Replace with your input directory
-    augmented_directory = "/mnt/c/Users/rebec/Desktop/dataset/trainmirror"    # Replace with your augmented images directory
-    output_tiff_file = "/mnt/c/Users/rebec/Desktop/dataset/trainmirror.tif"  # Replace with your output TIFF file path
+    input_directory =  "/mnt/c/Users/rebec/Desktop/dataset/DeepGlobe_Land_572/train" 
+    augmented_directory = "/mnt/c/Users/rebec/Desktop/dataset/trainmirror"    
+    output_tiff_file = "/mnt/c/Users/rebec/Desktop/dataset/trainmirror.tif"  
 
 
     images(input_directory, augmented_directory)
