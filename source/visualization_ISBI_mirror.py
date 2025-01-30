@@ -87,30 +87,29 @@ def evaluate(prediction, expected):
 # selecting device and loading model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = UNet(1,1).to(device)
-model.load_state_dict(torch.load("/home/danielbugelnig/AAU/5.Semester/Machine_Learning/U-Net/results/model1_mirror.pth" ,map_location=device, weights_only=True))
+model.load_state_dict(torch.load("../results/model_van_30.pth" ,map_location=device, weights_only=True))
 
 
 
 # ----------------------------------------------------------------------
 # Displaying the complete  train/test dataset
 #Training images
-train_image = Image.open("../ISBI-2012-challenge/ISBI-2012-mirrored/train-mirror.tif") 
+train_image = Image.open("../ISBI-2012-mirrored/train-mirror.tif") 
 #displayImages(train_image, "Training images")
 # Training labels
-train_label = Image.open("../ISBI-2012-challenge/ISBI-2012-mirrored/train-labels.tif")
+train_label = Image.open("../ISBI-2012-mirrored/train-labels.tif")
 #displayImages(train_label, "Training labels")
 
 # #Test images
-test_image = Image.open("../ISBI-2012-challenge/ISBI-2012-mirrored/test-mirror.tif")
+test_image = Image.open("../ISBI-2012-mirrored/test-mirror.tif")
 
 # displayImages(test_image, "Test images")
 # Training labels
-test_label = Image.open("../ISBI-2012-challenge/test-labels.tif")
+test_label = Image.open("../ISBI-2012-mirrored/test-labels.tif")
 # displayImages(test_label, "Test labels")
 #input("press enter for close")
 
 #---------------------------------------------------------------------
-
 
 
 # --------------------------------------------------------------------

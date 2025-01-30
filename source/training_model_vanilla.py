@@ -45,7 +45,6 @@ transform = transforms.Compose([transforms.ToTensor(), transforms.Resize([572,57
 
 
 transform_enhanced = transforms.Compose([
-      transforms.Resize((572, 572)),
       transforms.RandomHorizontalFlip(p=0.5),
       transforms.RandomRotation(degrees=15),
       transforms.ColorJitter(brightness=0.2, contrast=0.2),
@@ -159,8 +158,8 @@ if __name__ == "__main__":
   #train_dataset = Dataset("../ISBI-2012-challenge/train-volume.tif", "../ISBI-2012-challenge/train-labels.tif", transform)
   #test_dataset = Dataset("../ISBI-2012-challenge/test-volume.tif", "../ISBI-2012-challenge/test-labels.tif", transform)
   # Mirrored dataset
-  train_dataset = Dataset("../ISBI-2012-challenge/ISBI-2012-mirrored/train-mirror.tif", "../ISBI-2012-challenge/ISBI-2012-mirrored/train-labels.tif", transform)
-  test_dataset = Dataset("../ISBI-2012-challenge/ISBI-2012-mirrored/test-mirror.tif", "../ISBI-2012-challenge/ISBI-2012-mirrored/test-labels.tif", transform)
+  train_dataset = Dataset("../ISBI-2012-mirrored/train-mirror.tif", "../ISBI-2012-mirrored/train-labels.tif", transform)
+  test_dataset = Dataset("../ISBI-2012-mirrored/test-mirror.tif", "../ISBI-2012-mirrored/test-labels.tif", transform)
   #Batch size?
   train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
   test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
@@ -191,6 +190,7 @@ if __name__ == "__main__":
 
 
 
+#Mean: 0.49460574984550476, Std: 0.16874875128269196
 
 # model4 Recall 1.0, prec 0.74, lr 0.01, 6 epochs, no binary threshold
 #model 5 , weight initialization, 6 epochs, lr 0.01, no transformations, no binary threshold
