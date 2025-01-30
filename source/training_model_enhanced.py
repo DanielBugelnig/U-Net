@@ -51,7 +51,6 @@ class Dataset(Dataset):
 
 # Data transforms
 basic_transform = transforms.Compose([
-    transforms.Resize((572, 572)),
     transforms.ToTensor()
 ])
 
@@ -125,17 +124,12 @@ def test(model, dataloader, criterion):
 
 if __name__ == "__main__":
 
-    #paths
-    train_image_path = "../ISBI-2012-challenge/train-volume.tif"
-    train_label_path = "../ISBI-2012-challenge/train-labels.tif"
-    test_image_path = "../ISBI-2012-challenge/test-volume.tif"
-    test_label_path = "../ISBI-2012-challenge/test-labels.tif"
 
     # for google colab
-    #train_image_path = "/content/drive/My Drive/Machine_Learning/ISBI-2012-challenge/train-volume.tif"
-    #train_label_path = "/content/drive/My Drive/Machine_Learning/ISBI-2012-challenge/train-labels.tif"
-    #test_image_path = "/content/drive/My Drive/Machine_Learning/ISBI-2012-challenge/test-volume.tif"
-    #test_label_path = "/content/drive/My Drive/Machine_Learning/ISBI-2012-challenge/test-labels.tif"
+    train_image_path = "/content/drive/My Drive/Machine_Learning/ISBI-2012-challenge/train-volume.tif"
+    train_label_path = "/content/drive/My Drive/Machine_Learning/ISBI-2012-challenge/train-labels.tif"
+    test_image_path = "/content/drive/My Drive/Machine_Learning/ISBI-2012-challenge/test-volume.tif"
+    test_label_path = "/content/drive/My Drive/Machine_Learning/ISBI-2012-challenge/test-labels.tif"
 
     # Initial transform for computing mean and std
     train_dataset = Dataset(train_image_path, train_label_path, image_transform=basic_transform, label_transform=basic_transform)
@@ -146,7 +140,6 @@ if __name__ == "__main__":
 
     # Final transforms
     image_transform = transforms.Compose([
-        transforms.Resize((572, 572)),
         transforms.RandomHorizontalFlip(p=0.5),
         transforms.RandomRotation(degrees=15),
         transforms.ColorJitter(brightness=0.2, contrast=0.2),
@@ -155,7 +148,6 @@ if __name__ == "__main__":
     ])
 
     label_transform = transforms.Compose([
-        transforms.Resize((572, 572)),
         transforms.ToTensor()
     ])
 

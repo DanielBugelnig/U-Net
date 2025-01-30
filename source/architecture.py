@@ -33,11 +33,26 @@ import torch.nn.functional as F #for ReLu
 import torchvision.transforms.functional as Trans
 from torchinfo import summary
 
+def init_weights(module):
+    if isinstance(module, nn.Conv2d) or isinstance(module, nn.ConvTranspose2d):
+        # Apply He initialization for ReLU activation
+        nn.init.kaiming_normal_(module.weight, mode='fan_out', nonlinearity='relu')
+        if module.bias is not None:
+            nn.init.constant_(module.bias, 0)
+    elif isinstance(module, nn.BatchNorm2d):
+        # Initialize BatchNorm weights and biases
+        nn.init.constant_(module.weight, 1)
+        nn.init.constant_(module.bias, 0)
+
+
 class UNet(nn.Module):
     def __init__(self, input_number, output_number):
         super(UNet, self).__init__()
         self.input_number = input_number
         self.output_number = output_number
+
+        #  Initialize weights
+        self.apply(init_weights)
 
 
         # Encoder

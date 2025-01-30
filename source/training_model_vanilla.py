@@ -10,6 +10,11 @@ from architecture import UNet
 
 torch.cuda.empty_cache()
 
+
+
+
+
+
 #Loading data
 #https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 class Dataset(Dataset):
@@ -18,9 +23,12 @@ class Dataset(Dataset):
     self.labels = Image.open(label_path)
     self.transform = transform
 
+    
+
   def __len__(self):
     return self.images.n_frames
 
+  
   def __getitem__(self, idx):
     #find specific frame
     self.images.seek(idx)
@@ -81,7 +89,6 @@ def train(model, dataloader, criterion, optimizer, nrOfEpochs):
       #print(images.shape)
       optimizer.zero_grad()
       outputs=model(images)
-      #outputs = (outputs > 0.5).int()
       labels = Trans.center_crop(labels, [388,388])
       #assert outputs.shape == labels.shape, f"Shape mismatch: {outputs.shape} vs {labels.shape}"
       loss = criterion(outputs,labels)
@@ -149,15 +156,18 @@ def test(model, dataloader, criterion):
 
 if __name__ == "__main__":
   
-  train_dataset = Dataset("../ISBI-2012-challenge/train-volume.tif", "../ISBI-2012-challenge/train-labels.tif", transform)
-  test_dataset = Dataset("../ISBI-2012-challenge/test-volume.tif", "../ISBI-2012-challenge/test-labels.tif", transform)
+  #train_dataset = Dataset("../ISBI-2012-challenge/train-volume.tif", "../ISBI-2012-challenge/train-labels.tif", transform)
+  #test_dataset = Dataset("../ISBI-2012-challenge/test-volume.tif", "../ISBI-2012-challenge/test-labels.tif", transform)
+  # Mirrored dataset
+  train_dataset = Dataset("../ISBI-2012-challenge/ISBI-2012-mirrored/train-mirror.tif", "../ISBI-2012-challenge/ISBI-2012-mirrored/train-labels.tif", transform)
+  test_dataset = Dataset("../ISBI-2012-challenge/ISBI-2012-mirrored/test-mirror.tif", "../ISBI-2012-challenge/ISBI-2012-mirrored/test-labels.tif", transform)
   #Batch size?
   train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
   test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
   mean, std = computeMeanStd(train_loader)
   print(f"Mean: {mean}, Std: {std}")
-  input("Closing")
+  
   
 
   if torch.cuda.is_available():
@@ -166,23 +176,24 @@ if __name__ == "__main__":
     device = torch.device("cpu")   # Use CPU
 
   model = UNet(1,1).to(device)
-  optimizer= optim.Adam(model.parameters(),0.001)
-  criterion = nn.BCEWithLogitsLoss() #binary cross entropy loss with sigmoid
+  optimizer= optim.Adam(model.parameters(),lr=0.01)
+  criterion = nn.BCEWithLogitsLoss() #binary cross entropy loss with sigmoid V
 
 
   #Running code:
   print("Start Training")
-  train(model, train_loader, criterion, optimizer, 10)
+  train(model, train_loader, criterion, optimizer, 6)
 
   print("Start Evaluation")
   test(model, test_loader, criterion)
 
-  torch.save(model.state_dict(), "results/model1.pth")
+  torch.save(model.state_dict(), "../results/model5_mirror.pth")
 
 
 
 
-
+# model4 Recall 1.0, prec 0.74, lr 0.01, 6 epochs, no binary threshold
+#model 5 , weight initialization, 6 epochs, lr 0.01, no transformations, no binary threshold
 
 
 
