@@ -35,14 +35,9 @@ from torchinfo import summary
 
 def init_weights(module):
     if isinstance(module, nn.Conv2d) or isinstance(module, nn.ConvTranspose2d):
-        # Apply He initialization for ReLU activation
+        #Apply He for ReLU
         nn.init.kaiming_normal_(module.weight, mode='fan_out', nonlinearity='relu')
-        if module.bias is not None:
-            nn.init.constant_(module.bias, 0)
-    elif isinstance(module, nn.BatchNorm2d):
-        # Initialize BatchNorm weights and biases
-        nn.init.constant_(module.weight, 1)
-        nn.init.constant_(module.bias, 0)
+       
 
 
 class UNet(nn.Module):
@@ -76,6 +71,11 @@ class UNet(nn.Module):
 
         self.conv9 = nn.Conv2d(512, 1024, kernel_size=3, padding=0) # 1024x30x30
         self.conv10 = nn.Conv2d(1024, 1024, kernel_size=3, padding=0) # 1024x28x28
+
+
+        # Between Decoder and Encoder one dropout connection is added
+        # Dropout layer
+        self.drop = nn.Dropout(p=0.5)
 
         # Decoder
         # Upsampling by a factor of 2, --> stride=2, kernel_size=2
@@ -125,6 +125,9 @@ class UNet(nn.Module):
         x = F.relu(self.conv9(x))
         x = F.relu(self.conv10(x))
         
+        # Dropout
+        x = self.drop(x)
+    
         # Decoder
         x = self.upconv1(x)  # size 512x56x56
 
@@ -147,6 +150,7 @@ class UNet(nn.Module):
         x = F.relu(self.conv7b(x))
         x = F.relu(self.conv8b(x))
         x = self.final_conv(x)
+        x = F.softmax(x, dim=1)
         return x
 
  
