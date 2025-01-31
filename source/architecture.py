@@ -33,11 +33,21 @@ import torch.nn.functional as F #for ReLu
 import torchvision.transforms.functional as Trans
 from torchinfo import summary
 
+def init_weights(module):
+    if isinstance(module, nn.Conv2d) or isinstance(module, nn.ConvTranspose2d):
+        #Apply He for ReLU
+        nn.init.kaiming_normal_(module.weight, mode='fan_out', nonlinearity='relu')
+       
+
+
 class UNet(nn.Module):
     def __init__(self, input_number, output_number):
         super(UNet, self).__init__()
         self.input_number = input_number
         self.output_number = output_number
+
+        #  Initialize weights
+        self.apply(init_weights)
 
 
         # Encoder
@@ -61,6 +71,11 @@ class UNet(nn.Module):
 
         self.conv9 = nn.Conv2d(512, 1024, kernel_size=3, padding=0) # 1024x30x30
         self.conv10 = nn.Conv2d(1024, 1024, kernel_size=3, padding=0) # 1024x28x28
+
+
+        # Between Decoder and Encoder one dropout connection is added
+        # Dropout layer
+        self.drop = nn.Dropout(p=0.5)
 
         # Decoder
         # Upsampling by a factor of 2, --> stride=2, kernel_size=2
@@ -110,6 +125,9 @@ class UNet(nn.Module):
         x = F.relu(self.conv9(x))
         x = F.relu(self.conv10(x))
         
+        # Dropout
+        x = self.drop(x)
+    
         # Decoder
         x = self.upconv1(x)  # size 512x56x56
 
@@ -132,8 +150,9 @@ class UNet(nn.Module):
         x = F.relu(self.conv7b(x))
         x = F.relu(self.conv8b(x))
         x = self.final_conv(x)
+        x = F.softmax(x, dim=1)
         return x
 
  
-model = UNet(1,2)
+model = UNet(1,1)
 summary(model, input_size=(1, 1, 572, 572))  # Example input size
