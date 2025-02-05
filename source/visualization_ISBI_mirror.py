@@ -87,7 +87,8 @@ def evaluate(prediction, expected):
 # selecting device and loading model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = UNet(1,1).to(device)
-model.load_state_dict(torch.load("../results/model_van_30.pth" ,map_location=device, weights_only=True))
+#model.load_state_dict(torch.load("../results/model_120ep_dropout10_mirror_transf_normalized.pth" ,map_location=device, weights_only=True))
+model.load_state_dict(torch.load("../results/model_120ep_dropout10_mirror_transf_normalized.pth" ,map_location=device, weights_only=True))
 
 
 
