@@ -5,8 +5,10 @@ from torchvision import transforms
 import torchvision.transforms.functional as Trans
 from PIL import Image
 import matplotlib.pyplot as plt
+import random
 
 from architecture import UNet
+from dataset_transforms import Dataset
 
 # Clearing CUDA memory
 torch.cuda.empty_cache()
@@ -16,63 +18,7 @@ torch.cuda.empty_cache()
 # drive.mount('/content/drive')
 
 
-# Dataset class
-class Dataset(Dataset):
-    def __init__(self, image_path, label_path, image_transform=None, label_transform=None):
-        self.images = Image.open(image_path)
-        self.labels = Image.open(label_path)
-        self.image_transform = image_transform
-        self.label_transform = label_transform
 
-    def __len__(self):
-        return self.images.n_frames
-
-    def __getitem__(self, idx):
-        # Access specific frame
-        self.images.seek(idx)
-        self.labels.seek(idx)
-
-        # Convert to grayscale
-        image = self.images.convert("L")
-        label = self.labels.convert("L")
-
-        # Apply transformations
-        if self.image_transform:
-            image = self.image_transform(image)
-        if self.label_transform:
-            label = self.label_transform(label)
-
-        return image, label
-
-
-
-mean = 0.5
-std = 0.2
-
-
-# Data transforms
-basic_transform = transforms.Compose([
-    transforms.ToTensor()
-])
-
-basic_transform_resize = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Resize([572, 572])
-])
-
-advanced_transform_image = transforms.Compose([
-    transforms.RandomHorizontalFlip(p=0.5),
-    transforms.RandomRotation(degrees=15),
-    transforms.ColorJitter(brightness=0.2, contrast=0.2),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[mean], std=[mean])
-])
-
-advanced_transform_label = transforms.Compose([
-    transforms.RandomHorizontalFlip(p=0.5),
-    transforms.RandomRotation(degrees=15),
-    transforms.ToTensor(),
-])
 def computeMeanStd(dataloader):
     mean = 0.0
     std = 0.0
@@ -172,7 +118,7 @@ if __name__ == "__main__":
 
 
     # Initial transform for computing mean and std
-    computing_mean_std_dataset = Dataset(train_image_path, train_label_path, image_transform=basic_transform, label_transform=basic_transform)
+    computing_mean_std_dataset = Dataset(train_image_path, train_label_path, transform=False)
     computing_mean_std_dataset_loader = DataLoader(computing_mean_std_dataset, batch_size=1, shuffle=True)
 
 
@@ -184,8 +130,8 @@ if __name__ == "__main__":
     # Datasets and loaders
     # Vanilla Dataset: use basic_transform_resize
     # Mirrored Dataset: use advanced_transform_image and advanced_transform_label or : basic_transform for both
-    train_dataset = Dataset(train_image_path, train_label_path, image_transform=basic_transform_resize, label_transform=basic_transform_resize)
-    test_dataset = Dataset(test_image_path, test_label_path, image_transform=basic_transform_resize, label_transform=basic_transform_resize)
+    train_dataset = Dataset(train_image_path, train_label_path, transform=True)
+    test_dataset = Dataset(test_image_path, test_label_path, transform=True)
 
     train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)

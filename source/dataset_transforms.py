@@ -5,35 +5,52 @@ from torchvision import transforms
 import torchvision.transforms.functional as Trans
 from PIL import Image
 import matplotlib.pyplot as plt
+import random
 
 mean = 0.5
 std = 0.2
 
 # Dataset class
 class Dataset(Dataset):
-    def __init__(self, image_path, label_path, image_transform=None, label_transform=None):
+    def __init__(self, image_path, label_path, transform=False):
         self.images = Image.open(image_path)
         self.labels = Image.open(label_path)
-        self.image_transform = image_transform
-        self.label_transform = label_transform
+        self.transform = transform
 
     def __len__(self):
         return self.images.n_frames
+
 
     def __getitem__(self, idx):
         # Access specific frame
         self.images.seek(idx)
         self.labels.seek(idx)
 
+
+
         # Convert to grayscale
         image = self.images.convert("L")
         label = self.labels.convert("L")
 
-        # Apply transformations
-        if self.image_transform:
-            image = self.image_transform(image)
-        if self.label_transform:
-            label = self.label_transform(label)
+        if self.transform:
+
+          # Random horizontal flipping
+          if random.random() > 0.5:
+              image = Trans.hflip(image)
+              label = Trans.hflip(label)
+
+        # Random vertical flipping
+          if random.random() > 0.5:
+              image = Trans.vflip(image)
+              label = Trans.vflip(label)
+
+        # Transform to tensor
+        image = Trans.to_tensor(image)
+        label = Trans.to_tensor(label)
+
+        if self.transform:
+          # normalize the image
+            image = Trans.normalize(image, mean, std)
 
         return image, label
     

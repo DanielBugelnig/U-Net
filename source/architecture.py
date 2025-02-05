@@ -36,7 +36,7 @@ from torchinfo import summary
 def init_weights(module):
     if isinstance(module, nn.Conv2d) or isinstance(module, nn.ConvTranspose2d):
         #Apply He for ReLU
-        nn.init.kaiming_normal_(module.weight, mode='fan_out', nonlinearity='relu')
+        nn.init.kaiming_normal_(module.weight, mode='fan_in', nonlinearity='relu')
        
 
 

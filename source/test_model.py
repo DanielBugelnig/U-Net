@@ -6,6 +6,7 @@ import torchvision.transforms.functional as Trans
 from PIL import Image
 import matplotlib.pyplot as plt
 from architecture import UNet
+from dataset_transforms import Dataset
 
 torch.cuda.empty_cache()
 mean=0
@@ -14,60 +15,8 @@ std=0
 #Loading data
 #https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 # Dataset class
-class Dataset(Dataset):
-  def __init__(self, image_path, label_path, image_transform=None, label_transform=None):
-      self.images = Image.open(image_path)
-      self.labels = Image.open(label_path)
-      self.image_transform = image_transform
-      self.label_transform = label_transform
-
-  def __len__(self):
-      return self.images.n_frames
-
-  def __getitem__(self, idx):
-      # Access specific frame
-      self.images.seek(idx)
-      self.labels.seek(idx)
-
-      # Convert to grayscale
-      image = self.images.convert("L")
-      label = self.labels.convert("L")
-
-      # Apply transformations
-      if self.image_transform:
-          image = self.image_transform(image)
-      if self.label_transform:
-          label = self.label_transform(label)
-
-      return image, label
 
 
-
-
-
-# Data transforms
-basic_transform = transforms.Compose([
-    transforms.ToTensor()
-])
-
-basic_transform_resize = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Resize([572, 572])
-])
-
-advanced_transform_image = transforms.Compose([
-    transforms.RandomHorizontalFlip(p=0.5),
-    transforms.RandomRotation(degrees=15),
-    transforms.ColorJitter(brightness=0.2, contrast=0.2),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[mean], std=[mean])
-])
-
-advanced_transform_label = transforms.Compose([
-    transforms.RandomHorizontalFlip(p=0.5),
-    transforms.RandomRotation(degrees=15),
-    transforms.ToTensor(),
-])
 
 # for google colab, vanilla dataset ISBI 2012
 train_image_path = "/content/drive/My Drive/Machine_Learning/ISBI-2012-challenge/train-volume.tif"
@@ -172,12 +121,12 @@ if  __name__ == "__main__":
 
   device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
   model = UNet(1,1).to(device)
-  model.load_state_dict(torch.load("../results/model_van_30.pth" ,map_location=device, weights_only=True))
+  model.load_state_dict(torch.load("../results/model5_mirror.pth" ,map_location=device, weights_only=True))
   criterion = nn.BCEWithLogitsLoss() #binary cross entropy loss with sigmoid
 
 
   # Initial transform for computing mean and std
-  computing_mean_std_dataset = Dataset(train_image_path, train_label_path, image_transform=basic_transform, label_transform=basic_transform)
+  computing_mean_std_dataset = Dataset(train_image_path, train_label_path, transform=False)
   computing_mean_std_dataset_loader = DataLoader(computing_mean_std_dataset, batch_size=1, shuffle=True)
 
 
@@ -189,7 +138,7 @@ if  __name__ == "__main__":
   # Datasets and loaders
   # Vanilla Dataset: use basic_transform_resize
   # Mirrored Dataset: use advanced_transform_image and advanced_transform_label or : basic_transform for both
-  test_dataset = Dataset(test_image_path, test_label_path, image_transform=basic_transform, label_transform=basic_transform)
+  test_dataset = Dataset(test_image_path, test_label_path, transform=False)
   test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
   
   #Running code:
