@@ -1,6 +1,8 @@
 from PIL import Image, ImageOps
 import os
 
+#comme
+
 def mirror(input_path, output_path):
     try:
         with Image.open(input_path) as img:
